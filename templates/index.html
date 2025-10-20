@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- Mensagens de feedback -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="mensagem-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="container">
+        <h1>Lista de Tarefas</h1>
+
+        <!-- Formulário para adicionar uma nova tarefa -->
+        <form action="{{ url_for('add') }}" method="POST">
+            <input type="text" name="title" placeholder="Digite uma tarefa..." required>
+            <button type="submit">Adicionar</button>
+        </form>
+
+        <hr>
+
+        <!-- Lista de tarefas -->
+        <ul>
+        {% for task in tasks %}
+            <li>
+                {{ task.title }}
+                {% if not task.done %}
+                    <a href="{{ url_for('concluir', task_id=task.id) }}">Concluir</a>
+                {% else %}
+                    ✅ Concluída
+                {% endif %}
+                <a href="{{ url_for('deletar', task_id=task.id) }}">Deletar</a>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+
+</body>
+</html>
